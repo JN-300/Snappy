@@ -89,17 +89,23 @@ final class RestoreTtContent
     {
         $keepItems = array_filter($updateData, fn($item) => $item['deleted'] === 0);
         $keepItems = array_map(fn($item) => ['uid' => $item['uid'], 'pid' => $item['pid']], $keepItems);
+        $keepItemIds = array_column($keepItems, 'uid');
 
-        $ttContentQuery = GeneralUtility::makeInstance(ConnectionPool::class)
+
+        $query = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getConnectionForTable(self::TABLE)
             ->createQueryBuilder();
-        $ttContentQuery->getRestrictions()->removeAll();
+        $query->getRestrictions()->removeAll();
 
-        $itemsToDelete = $ttContentQuery->select('uid')
+        $query->select('uid')
             ->from(self::TABLE)
-            ->where($ttContentQuery->expr()->eq('pid', $this->currentPid))
-            ->andWhere($ttContentQuery->expr()->notIn('uid', array_column($keepItems, 'uid')))
-            ->executeQuery()
+            ->where($query->expr()->eq('pid', $this->currentPid));
+
+        if ($keepItemIds && !empty($keepItemIds)) {
+            $query->andWhere($query->expr()->notIn('uid', $keepItemIds));
+        }
+
+        $itemsToDelete = $query->executeQuery()
             ->fetchAllAssociative();
 
 

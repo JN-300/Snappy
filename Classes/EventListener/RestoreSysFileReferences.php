@@ -53,17 +53,22 @@ final class RestoreSysFileReferences
     {
         $keepItems = array_filter($data, fn($item) => $item['deleted'] === 0);
         $keepItems = array_map(fn($item) => ['uid' => $item['uid'], 'pid' => $item['pid']], $keepItems);
+        $keepItemIds = array_column($keepItems, 'uid');
         $query = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getConnectionForTable(self::TABLE)
             ->createQueryBuilder();
-        $query->getRestrictions()->removeAll();
-        $itemsToDelete = $query->select('uid')
-            ->from(self::TABLE)
-            ->where($query->expr()->eq('pid', $this->currentPid))
-            ->andWhere($query->expr()->notIn('uid', array_column($keepItems, 'uid')))
-            ->executeQuery()
-            ->fetchAllAssociative();
 
+        $query->getRestrictions()->removeAll();
+
+        $query->select('uid')
+            ->from(self::TABLE)
+            ->where($query->expr()->eq('pid', $this->currentPid));
+        if ($keepItemIds && !empty($keepItemIds)) {
+            $query->andWhere($query->expr()->notIn('uid', $keepItemIds));
+        }
+
+        $itemsToDelete = $query->executeQuery()
+            ->fetchAllAssociative();
 
         foreach ($itemsToDelete as $item)
         {
@@ -78,7 +83,7 @@ final class RestoreSysFileReferences
         $groupedData = [];
         $data = array_filter($data, fn($item) => $item['deleted'] === 0);
         foreach ($data as $dataset) {
-           $groupedData[$dataset['tablenames']][$dataset['uid_foreign']][$dataset['fieldname']][$dataset['uid']] = $dataset;
+            $groupedData[$dataset['tablenames']][$dataset['uid_foreign']][$dataset['fieldname']][$dataset['uid']] = $dataset;
         }
 
         return $groupedData;
