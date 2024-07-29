@@ -1,0 +1,40 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+  JeNe\Snappy\:
+    resource: '../Classes/*'
+    exclude: '../Classes/Domain/Model/*'
+  JeNe\Snappy\EventListener\ModifyButtonBarEventListener:
+    tags:
+      -
+        name: event.listener
+        identifier: je-ne/snappy/modify-button-bar-event-listener
+        event: TYPO3\CMS\Backend\Template\Components\ModifyButtonBarEvent
+  JeNe\Snappy\EventListener\CollectContentForPage:
+    tags:
+      -
+        name: event.listener
+        identifier: je-ne/snappy/add-content-for-page
+        event: JeNe\Snappy\Event\SnapshotAfterLoadingPageDataEvent
+  JeNe\Snappy\EventListener\CollectSysFileReferenceChanges:
+    tags:
+      -
+        name: event.listener
+        identifier: je-ne/snappy/collect-sys-file-reference-changes
+        event: JeNe\Snappy\Event\SnapshotAfterLoadingPageDataEvent
+        after: je-ne/snappy/add-content-for-page
+  JeNe\Snappy\EventListener\RestoreTtContent:
+    tags:
+      -
+        name: event.listener
+        identifier: je-ne/snappy/restore-tt-content
+        event: JeNe\Snappy\Event\SnapshotAfterRestoringPageDataEvent
+  JeNe\Snappy\EventListener\RestoreSysFileReferences:
+    tags:
+      -
+        name: event.listener
+        identifier: je-ne/snappy/restore-sys-file-references
+        event: JeNe\Snappy\Event\SnapshotAfterRestoringPageDataEvent
+        before: je-ne/snappy/restore-tt-content

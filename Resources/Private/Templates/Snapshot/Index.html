@@ -1,0 +1,59 @@
+<html
+        xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+        xmlns:core="http://typo3.org/ns/TYPO3/CMS/Core/ViewHelpers"
+        xmlns:be="http://typo3.org/ns/TYPO3/CMS/Backend/ViewHelpers"
+        data-namespace-typo3-fluid="true">
+
+<f:layout name="Default" />
+
+<f:section name="Content">
+    <div class="container-fluid mt-3 mb-3">
+
+        <div class="card">
+            <div class="card-header">
+                <div class="card-header-body">
+                    <h2>Create new Snapshot</h2>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <f:form action="store" name="newSnapshot" method="post" object="{newSnapshot}">
+                    <label>Title
+                        <f:form.textfield property="title" />
+                    </label>
+                    <f:form.submit class="btn btn-default" value="Store"/>
+                </f:form>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <table class="table table-striped table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th style="width: 100%">Title</th>
+                        <th class="nowrap">Created at</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <f:for each="{snapshots}" as="snapshot">
+                        <tr>
+                            <td>{snapshot.title}</td>
+                            <td class="nowrap">{snapshot.crdate->f:format.date(format:'y-m-d H:i:s')}</td>
+                            <td class="nowrap">
+                                <f:link.action action="restore" arguments="{snapshot:snapshot}"
+                                               class="btn btn-warning">Re-Import</f:link.action>
+
+                                <f:link.action action="delete" arguments="{'snapshot':snapshot}"
+                                               class="btn btn-default">Remove</f:link.action>
+
+                            </td>
+                        </tr>
+                    </f:for>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</f:section>
+
+</html>

@@ -1,0 +1,21 @@
+{
+    "name": "jene/snappy",
+    "description": "Sni Sna Snappy!",
+    "type": "typo3-cms-extension",
+    "license": [
+        "GPL-2.0-or-later"
+    ],
+    "require": {
+        "typo3/cms-core": "^12.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "JeNe\\Snappy\\": "Classes/"
+        }
+    },
+    "extra": {
+        "typo3/cms": {
+            "extension-key": "snappy"
+        }
+    }
+}
