@@ -23,6 +23,7 @@ return [
                 'store',
                 'delete',
                 'restore',
+                'notAllowed'
             ]
         ]
     ]

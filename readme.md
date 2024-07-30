@@ -7,8 +7,8 @@ This is a simple TYPO3 extension to create a snapshot from a given page.
 ### composer
 ```console 
 ## add github repo to composer
-$ composer config repositories.snappy vcs https://github.com/JN-300/Snappy
-$ composer require jene/snappy 
+$ ddev composer config repositories.snappy vcs https://github.com/JN-300/Snappy
+$ ddev composer require jene/snappy 
 ```
 
 ### update database

@@ -13,9 +13,14 @@ use Psr\Http\Message\StreamFactoryInterface;
 use TYPO3\CMS\Backend\Attribute\AsController;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
+use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Http\RedirectResponse;
+use TYPO3\CMS\Core\Type\Bitmask\Permission;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Http\ForwardResponse;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
+use TYPO3\CMS\Extbase\Mvc\RequestInterface;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 #[AsController]
 final  class SnapshotController extends ActionController
@@ -33,6 +38,26 @@ final  class SnapshotController extends ActionController
         protected readonly SnapshotService $snapshotService
     )
     {}
+
+
+    public function processRequest(RequestInterface $request): ResponseInterface
+    {
+        $response = parent::processRequest($request);
+
+        $pageId = $request->getQueryParams()['id'];
+        $pageInfo = BackendUtility::readPageAccess($pageId, $GLOBALS['BE_USER']->getPagePermsClause(Permission::PAGE_SHOW));
+        if ($pageInfo['doktype'] !== 1 && $this->actionMethodName !== 'notAllowedAction') {
+            return $this->redirect('notAllowed');
+        }
+        return $response;
+    }
+
+
+    public function notAllowedAction():ResponseInterface
+    {
+        $moduleTemplate = $this->moduleTemplateFactory->create($this->request);
+        return $this->htmlResponse($moduleTemplate->render());
+    }
 
 
     public function indexAction():ResponseInterface

@@ -12,9 +12,11 @@ use TYPO3\CMS\Backend\Template\Components\Buttons\DropDown\DropDownDivider;
 use TYPO3\CMS\Backend\Template\Components\Buttons\DropDown\DropDownHeader;
 use TYPO3\CMS\Backend\Template\Components\Buttons\DropDown\DropDownItem;
 use TYPO3\CMS\Backend\Template\Components\Buttons\DropDown\DropDownRadio;
+use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Http\Request;
 use TYPO3\CMS\Core\Http\ServerRequestFactory;
 use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Type\Bitmask\Permission;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
@@ -30,9 +32,12 @@ final class ModifyButtonBarEventListener
 
     public function __invoke(\TYPO3\CMS\Backend\Template\Components\ModifyButtonBarEvent $event): void
     {
-
         $pageId = $this->request->getQueryParams()['id'] ?? null;
-        if (!$pageId || $pageId <= 0) return;
+
+        $pageInfo = BackendUtility::readPageAccess($pageId, $GLOBALS['BE_USER']->getPagePermsClause(Permission::PAGE_SHOW));
+
+//        DebuggerUtility::var_dump($pageInfo['doktype']);
+        if (!$pageId || $pageId <= 0 || $pageInfo['doktype'] !== 1) return;
 
 
         $buttons = $event->getButtons();
