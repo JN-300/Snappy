@@ -3,14 +3,15 @@
 namespace JeNe\Snappy\Domain\Model;
 
 use JeNe\Snappy\DTO\SnapshotStoreObject;
+use TYPO3\CMS\Extbase\Annotation\Validate;
 
 class Snapshot extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
 {
-
+    #[Validate([
+        'validator' => 'NotEmpty'
+    ])]
     public string $title;
-
     protected ?\DateTime $crdate = null;
-
     protected ?string $snapshot = null;
 
     /**
@@ -22,9 +23,6 @@ class Snapshot extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     }
 
 
-    /**
-     * @return string
-     */
     public function getTitle(): string
     {
         return $this->title;

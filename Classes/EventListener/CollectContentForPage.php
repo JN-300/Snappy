@@ -36,6 +36,11 @@ final class CollectContentForPage
         $event->getSnapshotStoreObject()->addElementData(self::TABLE, $data);
     }
 
+    /**
+     * Filter out all fields from ignoreFields before storing data to Snapshot
+     * @param array $data
+     * @return array
+     */
     private function filterData(array $data):array
     {
         return
@@ -46,6 +51,13 @@ final class CollectContentForPage
                 $data
             );
     }
+
+    /**
+     * Load tt_content data from database
+     * @param int $pageId
+     * @return array
+     * @throws \Doctrine\DBAL\Exception
+     */
     private function loadData(int $pageId):array
     {
         $ttContentQuery = GeneralUtility::makeInstance(ConnectionPool::class)

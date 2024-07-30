@@ -1,0 +1,41 @@
+<html
+        xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+        xmlns:core="http://typo3.org/ns/TYPO3/CMS/Core/ViewHelpers"
+        xmlns:be="http://typo3.org/ns/TYPO3/CMS/Backend/ViewHelpers"
+        data-namespace-typo3-fluid="true">
+
+    <f:form action="store" name="newSnapshot" method="post" objectName="newSnapshot">
+        <div class="card card-secondary">
+            <div class="card-header">
+                <div class="card-header-body">
+                    <h2>Create new Snapshot</h2>
+                </div>
+            </div>
+
+            <div class="card-body">
+
+                <f:form.validationResults for="newSnapshot.title">
+                    <label for="title" class="form-label">Title</label>
+                    <div class="formengine-field-item">
+                        <div class="form-control-wrapper">
+                            <f:form.textfield property="title" class="form-control form-control-clearable" />
+                        </div>
+                    </div>
+
+                    <f:if condition="{validationResults.flattenedErrors}">
+                        <div style="color:red">
+                            <f:for each="{validationResults.errors}" as="error">
+                                <span>{error}</span>
+                            </f:for>
+                        </div>
+                    </f:if>
+                </f:form.validationResults>
+            </div>
+
+            <div class="card-footer">
+                <f:form.submit class="btn btn-default" value="Store"/>
+            </div>
+        </div>
+    </f:form>
+
+</html>

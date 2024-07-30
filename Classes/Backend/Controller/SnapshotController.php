@@ -40,6 +40,11 @@ final  class SnapshotController extends ActionController
     {}
 
 
+    /**
+     * Check Doktype of request and redirects to notAllowed action for non-standard pages
+     * @param RequestInterface $request
+     * @return ResponseInterface
+     */
     public function processRequest(RequestInterface $request): ResponseInterface
     {
         $response = parent::processRequest($request);
