@@ -22,6 +22,7 @@ use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 final class ModifyButtonBarEventListener
 {
+    const MAX_SNAPSHOTS_FOR_DROPDOWN = 5;
     protected ?ServerRequestInterface $request = null;
     public function __construct(
         private readonly SnapshotRepository $snapshotRepository
@@ -46,6 +47,8 @@ final class ModifyButtonBarEventListener
 
         $iconFactory = GeneralUtility::makeInstance(IconFactory::class);
         $buttonBar = $event->getButtonBar();
+
+        // create dropdown bar for t3 Backend
         $dropDown = $buttonBar->makeDropDownButton()
             ->setLabel('SnapShot')
             ->setTitle('Snapshot')
@@ -69,12 +72,11 @@ final class ModifyButtonBarEventListener
                 ->addItem(GeneralUtility::makeInstance(DropDownHeader::class)->setLabel('Re-Import'))
                 ;
         }
+
         $lastSnapshots = $this->snapshotRepository->createQuery()
             ->setOrderings(['crdate' => 'DESC'])
-            ->setLimit(5)
+            ->setLimit(self::MAX_SNAPSHOTS_FOR_DROPDOWN)
             ->execute();
-
-
         foreach ($lastSnapshots as $snapshot) {
             $dropDown
                 ->addItem(
@@ -86,11 +88,11 @@ final class ModifyButtonBarEventListener
                 )
             ;
         }
-        if ($snapshotCount > 5) {
+        if ($snapshotCount > self::MAX_SNAPSHOTS_FOR_DROPDOWN) {
             $dropDown
                 ->addItem(
                     GeneralUtility::makeInstance(DropDownItem::class)
-                        ->setLabel('... More')
+                        ->setLabel(sprintf('... %d more', $snapshotCount-self::MAX_SNAPSHOTS_FOR_DROPDOWN))
     //                    ->setHref('#snapshot')
                         ->setHref((string)$uriBuilder->buildUriFromRoute('web_snappy', ['id' => $pageId]))
 //                        ->setIcon($iconFactory->getIcon('actions-login'))
@@ -100,23 +102,7 @@ final class ModifyButtonBarEventListener
         }
 
 
-        $button = $buttonBar->makeLinkButton()
-            ->setHref('#')
-            ->setTitle('Create Snapshot')
-            ->setIcon($iconFactory->getIcon('actions-logout'))
-            ->setDataAttributes([
-                'snapshot' => 'create',
-                'dispatch-action' => 'TYPO3.InfoWindow.showItem',
-                'dispatch-args-list' => 'be_users,1',
-            ])
-        ;
-        $html = '
-            <script>
-                
-            
-            </script>
-        ';
-        $buttons[ButtonBar::BUTTON_POSITION_RIGHT][self::class][] = $html. $button . $dropDown;
+        $buttons[ButtonBar::BUTTON_POSITION_RIGHT][self::class][] =  $dropDown;
 
         $event->setButtons($buttons);
 

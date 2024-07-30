@@ -4,6 +4,10 @@ namespace JeNe\Snappy\Event;
 
 use JeNe\Snappy\DTO\SnapshotStoreObject;
 
+
+/**
+ * Base Event for all Snapshot Events
+ */
 class AbstractSnapshotEvent
 {
 

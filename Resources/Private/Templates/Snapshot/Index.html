@@ -7,26 +7,11 @@
 <f:layout name="Default" />
 
 <f:section name="Content">
-    <div class="container-fluid mt-3 mb-3">
+    <div class="container-fluid">
 
-        <div class="card">
-            <div class="card-header">
-                <div class="card-header-body">
-                    <h2>Create new Snapshot</h2>
-                </div>
-            </div>
+        <f:render partial="CreateForm" />
 
-            <div class="card-body">
-                <f:form action="store" name="newSnapshot" method="post" object="{newSnapshot}">
-                    <label>Title
-                        <f:form.textfield property="title" />
-                    </label>
-                    <f:form.submit class="btn btn-default" value="Store"/>
-                </f:form>
-            </div>
-        </div>
-
-        <div class="panel panel-default">
+        <div class="panel panel-default  mt-3 mb-3">
             <table class="table table-striped table-hover mb-0">
                 <thead>
                     <tr>

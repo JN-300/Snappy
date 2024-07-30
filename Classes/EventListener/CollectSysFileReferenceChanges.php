@@ -21,6 +21,12 @@ final class CollectSysFileReferenceChanges
         $event->getSnapshotStoreObject()->addElementData(self::TABLE, $sysFileReferenceChanges);
     }
 
+    /**
+     * Load sys_file_references from database
+     * @param int $pid
+     * @return \mixed[][]
+     * @throws \Doctrine\DBAL\Exception
+     */
     public function collectSysFileReferenceChanges(int $pid)
     {
         $sysFileReferenceQuery = GeneralUtility::makeInstance(ConnectionPool::class)

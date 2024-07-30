@@ -2,6 +2,11 @@
 
 namespace JeNe\Snappy\DTO;
 
+/**
+ * This is the storage object class for the Snapshot data
+ * The base page data will stored in property pageData
+ * all other data like tt_content, sys_file_references, etc, should be stored as subarray of elements
+ */
 class SnapshotStoreObject implements \JsonSerializable, \Stringable
 {
 
